@@ -1,3 +1,7 @@
+const userScore = document.getElementById('human');
+const computerScore = document.getElementById('computer');
+const textArea =  document.querySelector('div.Announcement');
+
 function computerPlay() {
     let result = Math.floor(Math.random() * 3);
     if (result == 0) {
@@ -12,47 +16,60 @@ function computerPlay() {
 
 }
 
-function singleRound(playerSelection, computerSelection) {
+function singleRound(e) {
+    let computerSelection = computerPlay();
+    console.log(computerSelection);
+    let playerSelection = e.target.id;
+    
+    
+    console.log(playerSelection);
     playerSelection = playerSelection.toLowerCase();
     computerSelection = computerSelection.toLowerCase();
+
     if (playerSelection == "scissors" && computerSelection == "rock"
         || playerSelection == "rock" && computerSelection == "paper"
         || playerSelection == "paper" && computerSelection == "scissors") {
-        console.log("Computer Has Won!");
-        return 1;
+    
+        textArea.textContent = `You have chosen ${playerSelection} while the computer choosed ${computerSelection} Therfore The Computer Has Won!, Pick any button to play again!`
+        ScoreUpdater(false);
     }
     else if (playerSelection == computerSelection) {
-        console.log("That's a Tie");
-        return 0;
+        textArea.textContent = `You have chosen ${playerSelection} while the computer choosed ${computerSelection} Surprisingly enough That's a Tie!, Pick any button to play again!`
+  
+        
     }
     else {
-        console.log("Congratulations! You have won");
-        return -1;
+        textArea.textContent = `You have chosen ${playerSelection} while the computer choosed ${computerSelection}, You win!`
+      
+        ScoreUpdater(true);
     }
 }
 
-function Game() {
-    let userScore = 0;
-    let computerScore = 0;
-    while (true) {
-        let userSelection = window.prompt("Rock, Paper or Scissors? What Shall it be?", "");
-        let round = singleRound(userSelection, computerPlay())
-        console.log(round);
-        if (round == -1)
-            userScore++;
-        if (round == 1){
-            computerScore++;
+function ScoreUpdater(userWon) {
+    const actualHumanScore = parseInt(userScore.textContent);
+    const actualComputerScore = parseInt(computerScore.textContent);
+
+        if (userWon)
+            userScore.textContent = actualHumanScore+1;
+        if (!userWon){
+            computerScore.textContent = actualComputerScore+1;
         }
-            console.log("UserScore:" + userScore + " ComputerScore:" + computerScore);
-            if (userScore == 5) {
-                console.log("User Has Won! The Game will now end");
-                return;
+            if (userScore.textContent == '5') {
+                textArea.textContent= "User Has Won! The Game will now end"
+              
             }
-            else if (computerScore == 5) {
-                console.log("Computer Has Won! The Game will now end");
-                return;
+            else if (computerScore.textContent == '5') {
+                textArea.textContent= "Computer Has Won! The Game will now end"
+   
             }
-    }
+    
     
    
 }
+
+const gameButtons = document.querySelectorAll('button.option');
+gameButtons.forEach(gameButton => {
+    gameButton.addEventListener('click', singleRound)
+});
+    
+
